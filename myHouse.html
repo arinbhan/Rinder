@@ -1,0 +1,356 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>My House — Rinder</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    :root{
+      --house-bg:#f4eadb;
+      --house-card:#fffaf3;
+      --house-ink:#2c241d;
+      --house-muted:#79695d;
+      --house-line:rgba(62,45,33,.10);
+      --house-orange:#ff7427;
+      --house-orange-2:#ff9b55;
+      --house-soft:#f9dfc6;
+      --house-dark:#221a15;
+      --house-green:#7cc988;
+    }
+    *{box-sizing:border-box}
+    body{background:var(--house-bg);color:var(--house-ink)}
+    .house-shell{min-height:100vh;position:relative;overflow:hidden;background:
+      radial-gradient(circle at 82% 8%,rgba(255,132,61,.22),transparent 27%),
+      radial-gradient(circle at 8% 34%,rgba(255,255,255,.72),transparent 25%),
+      linear-gradient(180deg,#fff8ef 0%,#f4e5d3 100%)}
+    .ambient{position:absolute;border-radius:999px;filter:blur(2px);pointer-events:none;animation:floaty 9s ease-in-out infinite}
+    .ambient.one{width:170px;height:170px;background:rgba(255,132,61,.12);right:6%;top:24%}
+    .ambient.two{width:90px;height:90px;background:rgba(255,255,255,.65);left:5%;top:68%;animation-delay:-3s}
+    .ambient.three{width:130px;height:130px;border:1px solid rgba(255,116,39,.2);right:23%;bottom:5%;animation-delay:-6s}
+    @keyframes floaty{50%{transform:translateY(-18px) translateX(8px) rotate(5deg)}}
+
+    .house-only-header{height:78px;display:flex;align-items:center;border-bottom:1px solid var(--house-line);background:rgba(255,249,241,.80);backdrop-filter:blur(18px);position:sticky;top:0;z-index:20}
+    .house-only-nav{display:flex;align-items:center;justify-content:space-between;gap:24px}
+    .house-only-brand{display:block;width:122px;line-height:0}
+    .house-only-brand img{width:100%;display:block}
+    .nav-meta{display:flex;align-items:center;gap:10px}
+    .house-only-label,.secure-pill{font-size:.79rem;font-weight:800;letter-spacing:.07em;text-transform:uppercase}
+    .house-only-label{color:var(--house-muted)}
+    .secure-pill{padding:9px 12px;border-radius:999px;background:#fff;border:1px solid var(--house-line);display:flex;align-items:center;gap:7px}
+    .secure-pill:before{content:"";width:8px;height:8px;border-radius:50%;background:var(--house-green);box-shadow:0 0 0 4px rgba(124,201,136,.13)}
+
+    .house-page{position:relative;z-index:1;padding:40px 0 64px}
+    .house-intro{display:grid;grid-template-columns:1.25fr .75fr;gap:28px;align-items:end;margin-bottom:24px}
+    .eyebrow{font-size:.78rem;font-weight:800;letter-spacing:.11em;text-transform:uppercase;color:var(--house-orange)}
+    .house-intro h1{font-size:clamp(2.6rem,5.8vw,5.4rem);line-height:.94;letter-spacing:-.06em;margin:8px 0 16px;max-width:900px}
+    .house-intro p{max-width:720px;color:var(--house-muted);font-size:1.06rem;line-height:1.7;margin:0}
+    .intro-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+    .summary-chip{background:rgba(255,250,243,.76);border:1px solid var(--house-line);border-radius:18px;padding:15px;transition:.22s ease;box-shadow:0 12px 28px rgba(84,54,29,.05)}
+    .summary-chip:hover{transform:translateY(-4px);box-shadow:0 16px 34px rgba(84,54,29,.10)}
+    .summary-chip strong{display:block;font-size:1.35rem;margin-bottom:4px}
+    .summary-chip span{font-size:.78rem;color:var(--house-muted)}
+
+    .house-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:start}
+    .house-stack{display:grid;gap:18px}
+    .utility-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:18px}
+    .utility-grid .house-panel{min-height:320px}
+    .compact-door{min-height:auto;padding:22px}
+    .compact-door .door-top{align-items:center}
+    .compact-door .door-center{min-height:auto;display:block;margin:18px 0}
+    .compact-door .lock-ring{width:92px;height:92px;margin:0 auto}
+    .compact-door .door-icon-large{font-size:2.3rem}
+    .compact-door .door-info-row{grid-template-columns:1fr 1fr}
+    .compact-door h2{font-size:1.5rem;margin:4px 0 6px}
+    .compact-door .door-live{white-space:nowrap}
+    .grocery-list,.maintenance-list,.poll-list{display:grid;gap:10px}
+    .grocery-item,.maintenance-item,.poll-item{background:#fff;border:1px solid rgba(44,36,29,.08);border-radius:16px;padding:13px;transition:.2s ease}
+    .grocery-item:hover,.maintenance-item:hover,.poll-item:hover{transform:translateY(-2px);border-color:rgba(255,116,39,.22);box-shadow:0 10px 22px rgba(77,48,26,.07)}
+    .grocery-item{display:flex;align-items:center;gap:10px}.grocery-item.done{opacity:.55}.grocery-item.done strong{text-decoration:line-through}
+    .tiny-btn{border:0;background:#f7eadc;border-radius:10px;padding:8px 10px;cursor:pointer;font-weight:800;color:#6f5b4a}.tiny-btn:hover{background:#ffddc4;color:#de5d15}
+    .maintenance-item strong,.poll-item strong{display:block;margin-bottom:4px}.maintenance-item span,.poll-item span{font-size:.8rem;color:var(--house-muted)}
+    .status-badge{display:inline-flex;margin-top:8px;padding:6px 9px;border-radius:999px;background:#f7eadc;font-size:.72rem;font-weight:800}
+    .poll-options{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.poll-options button{border:1px solid rgba(44,36,29,.10);background:#fff7ef;border-radius:999px;padding:8px 11px;cursor:pointer;font-weight:750}.poll-options button:hover{background:#ffe2ca;border-color:rgba(255,116,39,.22)}
+    .wifi-card{background:linear-gradient(145deg,#fff5e8,#f4dcc7);border:1px solid rgba(255,116,39,.15)}
+    .wifi-hero{display:flex;align-items:center;gap:14px;padding:14px;border-radius:18px;background:#fff;border:1px solid rgba(44,36,29,.07);margin-bottom:12px}.wifi-icon{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;background:#221a15;color:#fff;font-size:1.5rem}.wifi-meta small{display:block;color:var(--house-muted)}.wifi-meta strong{font-size:1.05rem}
+    .wifi-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}.wifi-actions button{border:0;border-radius:14px;padding:12px 14px;font:inherit;font-weight:800;cursor:pointer}.wifi-actions .primary{background:var(--house-orange);color:#fff}.wifi-actions .secondary{background:#fff;border:1px solid rgba(44,36,29,.10)}
+    .house-panel{position:relative;overflow:hidden;background:rgba(255,250,243,.92);border:1px solid rgba(67,46,29,.08);border-radius:28px;padding:26px;box-shadow:0 20px 48px rgba(68,45,24,.08);transition:.25s ease}
+    .house-panel:hover{transform:translateY(-3px);box-shadow:0 26px 56px rgba(68,45,24,.12);border-color:rgba(255,116,39,.18)}
+    .panel-head{display:flex;justify-content:space-between;align-items:flex-start;gap:18px;margin-bottom:18px}
+    .panel-head h2{font-size:1.55rem;margin:0 0 6px;letter-spacing:-.03em}
+    .panel-head p{margin:0;color:var(--house-muted);line-height:1.6;max-width:560px}
+    .icon-tile{width:46px;height:46px;display:grid;place-items:center;border-radius:15px;background:var(--house-soft);font-size:1.3rem;flex:0 0 auto;transition:.25s ease}
+    .house-panel:hover .icon-tile{transform:rotate(-6deg) scale(1.05)}
+
+    .door-panel{min-height:100%;display:flex;flex-direction:column;background:linear-gradient(155deg,#2a211b 0%,#17120f 65%,#2f1e14 100%);color:#fff;border-color:rgba(255,255,255,.06)}
+    .door-panel:hover{border-color:rgba(255,153,92,.24)}
+    .door-glow{position:absolute;width:250px;height:250px;border-radius:50%;background:rgba(255,116,39,.18);right:-85px;top:-75px;filter:blur(4px);transition:.35s ease}
+    .door-panel:hover .door-glow{transform:scale(1.12)}
+    .door-top,.door-center,.door-bottom{position:relative;z-index:1}
+    .door-top{display:flex;justify-content:space-between;gap:14px;align-items:flex-start}
+    .door-panel h2{font-size:2rem;margin:7px 0 8px}
+    .door-state{display:flex;align-items:center;gap:10px;color:#eadfd4;font-size:.93rem}
+    .door-orb{width:10px;height:10px;border-radius:50%;background:var(--house-green);box-shadow:0 0 0 6px rgba(124,201,136,.10)}
+    .door-live{font-size:.72rem;padding:8px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.07);color:#f4e9df}
+    .door-center{display:grid;place-items:center;min-height:270px}
+    .lock-ring{width:176px;height:176px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 50% 40%,rgba(255,255,255,.12),rgba(255,255,255,.03));border:1px solid rgba(255,255,255,.13);box-shadow:inset 0 0 0 18px rgba(255,255,255,.018),0 28px 60px rgba(0,0,0,.20);transition:.35s ease}
+    .door-panel:hover .lock-ring{transform:scale(1.03)}
+    .door-icon-large{font-size:4.2rem;line-height:1}
+    .door-info-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+    .door-mini{padding:12px 13px;border-radius:15px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08)}
+    .door-mini small{display:block;color:#bfae9f;margin-bottom:3px}
+    .door-mini strong{font-size:.92rem}
+    .door-action{width:100%;border:0;border-radius:17px;padding:16px 18px;background:linear-gradient(135deg,var(--house-orange),#ff9954);color:#fff;font:inherit;font-weight:850;cursor:pointer;box-shadow:0 14px 28px rgba(255,116,39,.22);transition:.22s ease}
+    .door-action:hover{transform:translateY(-2px) scale(1.01);box-shadow:0 18px 34px rgba(255,116,39,.30)}
+    .door-action:active{transform:translateY(1px) scale(.99)}
+    .door-panel.unlocked{background:linear-gradient(155deg,#49301f 0%,#21150f 65%,#42271a 100%)}
+    .door-panel.unlocked .lock-ring{box-shadow:0 0 0 12px rgba(255,137,68,.08),0 0 52px rgba(255,116,39,.25)}
+
+    .house-form{display:grid;grid-template-columns:1.25fr .75fr auto;gap:10px;margin-bottom:16px}
+    .house-input{width:100%;border:1px solid rgba(44,36,29,.12);background:#fff;border-radius:14px;padding:13px 14px;font:inherit;color:inherit;outline:none;transition:.2s ease}
+    .house-input:hover{border-color:rgba(255,116,39,.32)}
+    .house-input:focus{border-color:var(--house-orange);box-shadow:0 0 0 4px rgba(255,116,39,.10)}
+    .house-submit{border:0;border-radius:14px;padding:0 18px;background:var(--house-dark);color:#fff;font:inherit;font-weight:800;cursor:pointer;transition:.2s ease}
+    .house-submit:hover{transform:translateY(-2px);background:#3b2a20}
+    .house-textarea{min-height:112px;resize:vertical}
+    .notes-form{display:grid;gap:10px}
+    .task-list,.note-list{display:grid;gap:10px}
+    .task,.note{background:#fff;border:1px solid rgba(44,36,29,.08);border-radius:17px;padding:14px;transition:.2s ease}
+    .task:hover,.note:hover{transform:translateX(3px);border-color:rgba(255,116,39,.22);box-shadow:0 10px 22px rgba(77,48,26,.07)}
+    .task{display:flex;align-items:center;gap:12px}
+    .task button{width:32px;height:32px;border:0;border-radius:10px;background:#f7eadc;font-size:1rem;cursor:pointer;color:#7a6655;transition:.2s ease}
+    .task button:hover{background:#ffddc4;color:#de5d15;transform:scale(1.08)}
+    .task-name{flex:1;min-width:0}
+    .task-name strong{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .task-name span{font-size:.8rem;color:var(--house-muted)}
+    .task.done{opacity:.55}
+    .task.done strong{text-decoration:line-through}
+    .note{line-height:1.55;position:relative;padding-left:18px}
+    .note:before{content:"";position:absolute;left:0;top:14px;bottom:14px;width:4px;border-radius:999px;background:linear-gradient(var(--house-orange),var(--house-orange-2))}
+    .note time{display:block;margin-top:8px;font-size:.76rem;color:var(--house-muted)}
+    .empty-state{border:1px dashed rgba(44,36,29,.15);border-radius:16px;padding:20px;text-align:center;color:var(--house-muted);background:rgba(255,255,255,.45)}
+
+    .micro-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}
+    .micro-card{padding:12px;border-radius:15px;background:#f7eadc;border:1px solid rgba(44,36,29,.06);transition:.2s ease}
+    .micro-card:hover{transform:translateY(-2px);background:#f5dfca}
+    .micro-card small{display:block;color:var(--house-muted);margin-bottom:4px}
+    .micro-card strong{font-size:.92rem}
+
+    .house-toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,18px);opacity:0;background:#171310;color:#fff;padding:12px 18px;border-radius:999px;transition:.25s ease;z-index:50;pointer-events:none;box-shadow:0 16px 34px rgba(0,0,0,.22)}
+    .house-toast.show{opacity:1;transform:translate(-50%,0)}
+
+    @media(max-width:1000px){.house-intro{grid-template-columns:1fr}.intro-summary{max-width:560px}.house-grid,.utility-grid{grid-template-columns:1fr}.door-panel{min-height:auto}.door-center{min-height:auto}}
+    @media(max-width:700px){.house-form{grid-template-columns:1fr}.house-submit{padding:13px 18px}.intro-summary{grid-template-columns:1fr 1fr}.nav-meta .house-only-label{display:none}.door-info-row,.micro-row,.wifi-actions{grid-template-columns:1fr}.house-page{padding-top:28px}.house-intro h1{font-size:3.1rem}.house-panel{padding:20px;border-radius:22px}.door-panel{min-height:auto}}
+    @media(max-width:460px){.intro-summary{grid-template-columns:1fr}.house-only-brand{width:105px}.secure-pill{font-size:.68rem;padding:8px 10px}}
+  </style>
+</head>
+<body>
+  <div class="house-shell">
+    <div class="ambient one"></div><div class="ambient two"></div><div class="ambient three"></div>
+    <header class="house-only-header">
+      <div class="container house-only-nav">
+        <div class="house-only-brand"><img src="assets/rinder-logo.png" alt="Rinder"></div>
+        <div class="nav-meta">
+          <div class="house-only-label">My House</div>
+          <div class="secure-pill">Private space</div>
+        </div>
+      </div>
+    </header>
+
+    <main class="house-page">
+      <div class="container">
+        <section class="house-intro">
+          <div>
+            <div class="eyebrow">Private household dashboard</div>
+            <h1>Run the house without the group-chat chaos.</h1>
+            <p>One calm place for chores, anonymous household notes and quick front-door access.</p>
+          </div>
+          <div class="intro-summary">
+            <div class="summary-chip"><strong id="openChoreCount">0</strong><span>Open chores</span></div>
+            <div class="summary-chip"><strong id="noteCount">0</strong><span>Notes posted</span></div>
+            <div class="summary-chip"><strong id="doorSummary">Locked</strong><span>Front door</span></div>
+          </div>
+        </section>
+
+        <section class="house-grid">
+          <div class="house-stack">
+            <section class="house-panel">
+              <div class="panel-head"><div><h2>Chore management</h2><p>Add tasks, assign them, and clear them when they’re done.</p></div><div class="icon-tile">✓</div></div>
+              <form class="house-form" id="choreForm"><input class="house-input" id="choreName" placeholder="e.g. Take out recycling" required><input class="house-input" id="chorePerson" placeholder="Assign to" required><button class="house-submit" type="submit">Add chore</button></form>
+              <div class="task-list" id="taskList"></div>
+            </section>
+
+            <section class="house-panel">
+              <div class="panel-head"><div><h2>Anonymous notes</h2><p>Leave something for everyone without attaching your name.</p></div><div class="icon-tile">✦</div></div>
+              <form class="notes-form" id="noteForm"><textarea class="house-input house-textarea" id="noteText" placeholder="Write an anonymous household note…" required></textarea><button class="house-submit" type="submit" style="padding:13px 18px;justify-self:start">Post anonymously</button></form>
+              <div class="note-list" id="noteList" style="margin-top:16px"></div>
+            </section>
+          </div>
+
+          <div class="house-stack">
+            <section class="house-panel door-panel compact-door" id="doorCard">
+              <div class="door-glow"></div>
+              <div class="door-top"><div><div class="eyebrow" style="color:#ffb181">Front door</div><h2>Door access</h2><div class="door-state"><span class="door-orb" id="statusDot"></span><span id="doorStatus">Locked · secure</span></div></div><div class="door-live">Live</div></div>
+              <div class="door-center"><div class="lock-ring"><div class="door-icon-large" id="doorIcon">🔒</div></div></div>
+              <div class="door-bottom"><div class="door-info-row"><div class="door-mini"><small>Auto re-lock</small><strong>10 seconds</strong></div><div class="door-mini"><small>Last action</small><strong id="lastDoorAction">No activity yet</strong></div></div><button class="door-action" id="unlockDoor" type="button">Unlock front door</button></div>
+            </section>
+
+            <section class="house-panel wifi-card">
+              <div class="panel-head"><div><h2>House Wi‑Fi</h2><p>Keep the network info somewhere everyone can find it.</p></div><div class="icon-tile">⌁</div></div>
+              <div class="wifi-hero"><div class="wifi-icon">⌁</div><div class="wifi-meta"><small>Network</small><strong id="wifiName">Rinder House 5G</strong><small style="margin-top:6px">Password: <span id="wifiPass">••••••••••</span></small></div></div>
+              <div class="wifi-actions"><button class="primary" id="toggleWifiPass" type="button">Show password</button><button class="secondary" id="copyWifi" type="button">Copy details</button></div>
+            </section>
+          </div>
+        </section>
+
+        <section class="utility-grid">
+          <section class="house-panel">
+            <div class="panel-head"><div><h2>Shared grocery list</h2><p>Add what the house needs and check items off while shopping.</p></div><div class="icon-tile">🛒</div></div>
+            <form class="house-form" id="groceryForm" style="grid-template-columns:1fr auto"><input class="house-input" id="groceryItem" placeholder="e.g. Milk" required><button class="house-submit" type="submit">Add item</button></form>
+            <div class="grocery-list" id="groceryList"></div>
+          </section>
+
+          <section class="house-panel">
+            <div class="panel-head"><div><h2>Maintenance requests</h2><p>Log issues around the house and track whether they are open or resolved.</p></div><div class="icon-tile">🛠</div></div>
+            <form class="house-form" id="maintenanceForm" style="grid-template-columns:1fr auto"><input class="house-input" id="maintenanceText" placeholder="e.g. Kitchen tap is leaking" required><button class="house-submit" type="submit">Submit</button></form>
+            <div class="maintenance-list" id="maintenanceList"></div>
+          </section>
+
+          <section class="house-panel">
+            <div class="panel-head"><div><h2>Quick polls</h2><p>Settle small house decisions without another group-chat thread.</p></div><div class="icon-tile">◉</div></div>
+            <form class="house-form" id="pollForm" style="grid-template-columns:1fr auto"><input class="house-input" id="pollQuestion" placeholder="e.g. Movie night Friday?" required><button class="house-submit" type="submit">Create poll</button></form>
+            <div class="poll-list" id="pollList"></div>
+          </section>
+
+          <section class="house-panel">
+            <div class="panel-head"><div><h2>House essentials</h2><p>A few things everyone needs at a glance.</p></div><div class="icon-tile">⌂</div></div>
+            <div class="micro-row" style="grid-template-columns:1fr 1fr"><div class="micro-card"><small>Garbage day</small><strong>Thursday</strong></div><div class="micro-card"><small>Quiet hours</small><strong>11 PM – 7 AM</strong></div><div class="micro-card"><small>Emergency contact</small><strong>Landlord</strong></div><div class="micro-card"><small>Parking</small><strong>2 resident spots</strong></div></div>
+          </section>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <div class="house-toast" id="toast">Front door unlocked</div>
+
+  <script>
+    const $ = (id) => document.getElementById(id);
+    const TASK_KEY = 'rinder_house_tasks_v2';
+    const NOTE_KEY = 'rinder_house_notes_v2';
+    const GROCERY_KEY='rinder_house_grocery_v1';
+    const MAINT_KEY='rinder_house_maintenance_v1';
+    const POLL_KEY='rinder_house_polls_v1';
+
+    const starterTasks = [
+      {id:1,name:'Take out recycling',person:'Alex',done:false},
+      {id:2,name:'Wipe kitchen counters',person:'Maya',done:false},
+      {id:3,name:'Vacuum living room',person:'Jordan',done:true}
+    ];
+    const starterNotes = [
+      {id:1,text:'Please keep the front entry clear tonight.',time:new Date(Date.now()-3600000).toISOString()},
+      {id:2,text:'Dishwasher is clean — feel free to unload it.',time:new Date(Date.now()-7200000).toISOString()}
+    ];
+
+    let tasks = JSON.parse(localStorage.getItem(TASK_KEY) || 'null') || starterTasks;
+    let notes = JSON.parse(localStorage.getItem(NOTE_KEY) || 'null') || starterNotes;
+    let groceries = JSON.parse(localStorage.getItem(GROCERY_KEY) || 'null') || [{id:11,name:'Milk',done:false},{id:12,name:'Paper towels',done:true}];
+    let maintenance = JSON.parse(localStorage.getItem(MAINT_KEY) || 'null') || [{id:21,text:'Hallway light flickering',status:'Open'}];
+    let polls = JSON.parse(localStorage.getItem(POLL_KEY) || 'null') || [{id:31,q:'Movie night Friday?',yes:2,no:1}];
+
+    function save(){
+      localStorage.setItem(TASK_KEY,JSON.stringify(tasks));
+      localStorage.setItem(NOTE_KEY,JSON.stringify(notes));
+      localStorage.setItem(GROCERY_KEY,JSON.stringify(groceries));
+      localStorage.setItem(MAINT_KEY,JSON.stringify(maintenance));
+      localStorage.setItem(POLL_KEY,JSON.stringify(polls));
+    }
+    function updateSummary(){
+      $('openChoreCount').textContent = tasks.filter(t=>!t.done).length;
+      $('noteCount').textContent = notes.length;
+    }
+    function renderTasks(){
+      const list=$('taskList'); list.innerHTML='';
+      if(!tasks.length){ list.innerHTML='<div class="empty-state">No chores yet. Add one above.</div>'; updateSummary(); return; }
+      tasks.forEach(t=>{
+        const row=document.createElement('div'); row.className='task'+(t.done?' done':'');
+        row.innerHTML=`<button type="button" aria-label="Toggle chore">${t.done?'↺':'✓'}</button><div class="task-name"><strong>${escapeHtml(t.name)}</strong><span>Assigned to ${escapeHtml(t.person)}</span></div><button type="button" aria-label="Delete chore">×</button>`;
+        row.children[0].onclick=()=>{t.done=!t.done;save();renderTasks();};
+        row.children[2].onclick=()=>{tasks=tasks.filter(x=>x.id!==t.id);save();renderTasks();};
+        list.appendChild(row);
+      });
+      updateSummary();
+    }
+    function renderNotes(){
+      const list=$('noteList'); list.innerHTML='';
+      if(!notes.length){ list.innerHTML='<div class="empty-state">No anonymous notes yet.</div>'; updateSummary(); return; }
+      notes.slice().reverse().forEach(n=>{
+        const el=document.createElement('div'); el.className='note';
+        el.innerHTML=`${escapeHtml(n.text)}<time>${new Date(n.time).toLocaleString()}</time>`;
+        list.appendChild(el);
+      });
+      updateSummary();
+    }
+    function renderGroceries(){
+      const list=$('groceryList'); list.innerHTML='';
+      groceries.forEach(g=>{ const el=document.createElement('div'); el.className='grocery-item'+(g.done?' done':''); el.innerHTML=`<button class="tiny-btn" type="button">${g.done?'↺':'✓'}</button><strong style="flex:1">${escapeHtml(g.name)}</strong><button class="tiny-btn" type="button">×</button>`; el.children[0].onclick=()=>{g.done=!g.done;save();renderGroceries()}; el.children[2].onclick=()=>{groceries=groceries.filter(x=>x.id!==g.id);save();renderGroceries()}; list.appendChild(el); });
+      if(!groceries.length) list.innerHTML='<div class="empty-state">Nothing on the grocery list.</div>';
+    }
+    function renderMaintenance(){
+      const list=$('maintenanceList'); list.innerHTML='';
+      maintenance.slice().reverse().forEach(m=>{ const el=document.createElement('div'); el.className='maintenance-item'; el.innerHTML=`<strong>${escapeHtml(m.text)}</strong><span>House maintenance</span><br><button class="status-badge" type="button">${m.status}</button>`; el.querySelector('button').onclick=()=>{m.status=m.status==='Open'?'Resolved':'Open';save();renderMaintenance()}; list.appendChild(el); });
+      if(!maintenance.length) list.innerHTML='<div class="empty-state">No maintenance requests.</div>';
+    }
+    function renderPolls(){
+      const list=$('pollList'); list.innerHTML='';
+      polls.slice().reverse().forEach(p=>{ const el=document.createElement('div'); el.className='poll-item'; el.innerHTML=`<strong>${escapeHtml(p.q)}</strong><span>${p.yes+p.no} votes</span><div class="poll-options"><button type="button">Yes · ${p.yes}</button><button type="button">No · ${p.no}</button></div>`; const b=el.querySelectorAll('button'); b[0].onclick=()=>{p.yes++;save();renderPolls()}; b[1].onclick=()=>{p.no++;save();renderPolls()}; list.appendChild(el); });
+      if(!polls.length) list.innerHTML='<div class="empty-state">No active polls.</div>';
+    }
+    function escapeHtml(str){return str.replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#039;','"':'&quot;'}[c]));}
+    function toast(msg){const t=$('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1800);}
+
+    $('choreForm').addEventListener('submit',e=>{
+      e.preventDefault();
+      tasks.push({id:Date.now(),name:$('choreName').value.trim(),person:$('chorePerson').value.trim(),done:false});
+      save();renderTasks();e.target.reset();toast('Chore added');
+    });
+    $('noteForm').addEventListener('submit',e=>{
+      e.preventDefault();
+      notes.push({id:Date.now(),text:$('noteText').value.trim(),time:new Date().toISOString()});
+      save();renderNotes();e.target.reset();toast('Anonymous note posted');
+    });
+
+    $('groceryForm').addEventListener('submit',e=>{e.preventDefault();groceries.push({id:Date.now(),name:$('groceryItem').value.trim(),done:false});save();renderGroceries();e.target.reset();toast('Grocery item added')});
+    $('maintenanceForm').addEventListener('submit',e=>{e.preventDefault();maintenance.push({id:Date.now(),text:$('maintenanceText').value.trim(),status:'Open'});save();renderMaintenance();e.target.reset();toast('Maintenance request submitted')});
+    $('pollForm').addEventListener('submit',e=>{e.preventDefault();polls.push({id:Date.now(),q:$('pollQuestion').value.trim(),yes:0,no:0});save();renderPolls();e.target.reset();toast('Poll created')});
+    const WIFI_PASSWORD='rinder2026'; let wifiShown=false;
+    $('toggleWifiPass').addEventListener('click',()=>{wifiShown=!wifiShown;$('wifiPass').textContent=wifiShown?WIFI_PASSWORD:'••••••••••';$('toggleWifiPass').textContent=wifiShown?'Hide password':'Show password'});
+    $('copyWifi').addEventListener('click',async()=>{const text=`Network: ${$('wifiName').textContent}\nPassword: ${WIFI_PASSWORD}`; try{await navigator.clipboard.writeText(text);toast('Wi‑Fi details copied')}catch{toast('Copy unavailable in this browser')}});
+
+    let unlockTimer;
+    $('unlockDoor').addEventListener('click',()=>{
+      clearTimeout(unlockTimer);
+      $('doorCard').classList.add('unlocked');
+      $('doorStatus').textContent='Unlocked · relocking soon';
+      $('doorIcon').textContent='🔓';
+      $('statusDot').style.background='#ff9a55';
+      $('doorSummary').textContent='Unlocked';
+      $('lastDoorAction').textContent=new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
+      toast('Front door unlocked');
+      $('unlockDoor').textContent='Door unlocked';
+      $('unlockDoor').disabled=true;
+      unlockTimer=setTimeout(()=>{
+        $('doorCard').classList.remove('unlocked');
+        $('doorStatus').textContent='Locked · secure';
+        $('doorIcon').textContent='🔒';
+        $('statusDot').style.background='var(--house-green)';
+        $('doorSummary').textContent='Locked';
+        $('unlockDoor').textContent='Unlock front door';
+        $('unlockDoor').disabled=false;
+        toast('Front door relocked');
+      },10000);
+    });
+
+    renderTasks();renderNotes();renderGroceries();renderMaintenance();renderPolls();
+  </script>
+</body>
+</html>
