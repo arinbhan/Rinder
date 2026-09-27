@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Rinder — Me</title>
+  <style>
+    :root{
+      --cream:#f6efe3;
+      --paper:#fffaf2;
+      --ink:#201b17;
+      --muted:#776f66;
+      --line:#e7d8c7;
+      --orange:#ff6b2c;
+      --orange-2:#ff8f4d;
+      --peach:#ffd6ba;
+      --dark:#29211c;
+      --green:#71866a;
+      --shadow:0 18px 55px rgba(67,42,24,.09);
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;min-height:100%;font-family:Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--cream);color:var(--ink)}
+    button,input,textarea,select{font:inherit}
+    button{cursor:pointer}
+    .app{min-height:100vh;display:grid;grid-template-columns:92px 1fr}
+    .rail{position:sticky;top:0;height:100vh;background:var(--dark);display:flex;flex-direction:column;align-items:center;padding:18px 12px;gap:12px}
+    .brand-mark{width:54px;height:54px;border-radius:18px;background:linear-gradient(145deg,var(--orange),var(--orange-2));display:grid;place-items:center;color:white;font-weight:900;font-size:1.25rem;box-shadow:0 12px 28px rgba(255,107,44,.26);margin-bottom:14px}
+    .rail-btn{width:52px;height:52px;border:0;border-radius:17px;background:transparent;color:#d7cbc0;display:grid;place-items:center;font-size:1.28rem;transition:.18s}
+    .rail-btn:hover,.rail-btn.active{background:rgba(255,255,255,.1);color:#fff;transform:translateY(-2px)}
+    .rail-spacer{flex:1}
+    .avatar-mini{width:42px;height:42px;border-radius:50%;background:var(--peach);display:grid;place-items:center;font-weight:800;color:#6f4228;border:2px solid rgba(255,255,255,.18)}
+
+    .page{padding:28px 34px 42px;overflow:hidden;position:relative}
+    .page:before,.page:after{content:"";position:absolute;border-radius:50%;filter:blur(0);pointer-events:none;opacity:.45}
+    .page:before{width:340px;height:340px;background:#f8d5bd;right:-140px;top:-150px}
+    .page:after{width:260px;height:260px;background:#eddac5;left:12%;bottom:-120px}
+    .shell{position:relative;z-index:1;max-width:1240px;margin:0 auto}
+    .topbar{display:flex;justify-content:space-between;align-items:center;gap:18px;margin-bottom:20px}
+    .title-wrap small{text-transform:uppercase;letter-spacing:.12em;color:#8a5b3c;font-weight:800;font-size:.74rem}
+    .title-wrap h1{font-size:clamp(2.5rem,5vw,4.8rem);line-height:.95;letter-spacing:-.065em;margin:6px 0 0}
+    .edit-top{border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:999px;padding:11px 16px;font-weight:700;box-shadow:0 8px 24px rgba(69,43,26,.05);transition:.18s}
+    .edit-top:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
+
+    .hero-card{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(310px,.9fr);gap:16px;margin-bottom:16px}
+    .profile-card,.side-card,.panel{background:rgba(255,250,242,.94);border:1px solid rgba(111,77,53,.11);border-radius:28px;box-shadow:0 12px 40px rgba(67,42,24,.065)}
+    .profile-card{padding:26px;display:flex;align-items:center;gap:22px;min-height:210px;position:relative;overflow:hidden}
+    .profile-card:after{content:"";position:absolute;width:160px;height:160px;border-radius:50%;background:linear-gradient(145deg,#ffe0c8,#ffd1af);right:-50px;bottom:-60px}
+    .avatar{width:110px;height:110px;border-radius:28px;background:linear-gradient(145deg,var(--orange),var(--orange-2));display:grid;place-items:center;color:#fff;font-size:2rem;font-weight:900;box-shadow:0 18px 38px rgba(255,107,44,.22);flex:0 0 auto;position:relative;z-index:1}
+    .profile-copy{position:relative;z-index:1;min-width:0}
+    .profile-copy h2{font-size:2rem;letter-spacing:-.045em;margin:0 0 4px}
+    .profile-copy .email{color:var(--muted);font-size:.95rem}
+    .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+    .chip{padding:8px 11px;border-radius:999px;background:#f3e7da;color:#6f5d4e;font-size:.82rem}
+    .progress-line{margin-top:18px;max-width:440px}
+    .progress-head{display:flex;justify-content:space-between;color:var(--muted);font-size:.82rem;margin-bottom:7px}
+    .progress{height:9px;background:#eee0d1;border-radius:999px;overflow:hidden}
+    .progress>span{display:block;height:100%;width:82%;background:linear-gradient(90deg,var(--orange),var(--orange-2));border-radius:inherit}
+
+    .side-card{padding:22px;display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .metric{border:1px solid var(--line);background:#fffdfa;border-radius:20px;padding:17px;transition:.18s}
+    .metric:hover{transform:translateY(-3px);border-color:#f4b083;box-shadow:0 12px 24px rgba(67,42,24,.06)}
+    .metric .n{font-size:1.9rem;font-weight:900;letter-spacing:-.04em}
+    .metric span{display:block;color:var(--muted);font-size:.82rem;margin-top:2px}
+    .metric.wide{grid-column:1/-1;background:var(--ink);color:white;border-color:var(--ink)}
+    .metric.wide span{color:#cfc2b6}
+
+    .content-grid{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(300px,.65fr);gap:16px}
+    .panel{padding:24px}
+    .panel-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:18px}
+    .panel-head h3{margin:0;font-size:1.35rem;letter-spacing:-.035em}
+    .panel-head span{color:var(--muted);font-size:.84rem}
+    .details{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+    .detail{padding:15px 16px;border:1px solid var(--line);border-radius:17px;background:#fffdfa;transition:.18s}
+    .detail:hover{border-color:#f3b085;transform:translateY(-2px)}
+    .detail small{display:block;color:#9a8d80;text-transform:uppercase;letter-spacing:.08em;font-size:.69rem;font-weight:800;margin-bottom:4px}
+    .detail strong{font-size:.98rem}
+    .detail.full{grid-column:1/-1}
+    .bio-text{font-weight:500;line-height:1.6;color:#4d443d}
+
+
+    .connections-stack{display:grid;gap:16px;align-content:start}
+    .connection-tab{position:relative;overflow:hidden}
+    .connection-tab:before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;background:linear-gradient(var(--orange),var(--orange-2))}
+
+    .friend-list{display:grid;gap:10px}
+    .friend{display:flex;align-items:center;gap:11px;padding:11px;border-radius:16px;border:1px solid var(--line);background:#fffdfa;transition:.18s}
+    .friend:hover{transform:translateX(4px);border-color:#f1ad80}
+    .friend-avatar{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;font-weight:800;background:var(--peach);color:#6d4128}
+    .friend-copy{min-width:0;flex:1}
+    .friend-copy strong{display:block;font-size:.92rem}
+    .friend-copy span{font-size:.78rem;color:var(--muted)}
+    .status{font-size:.72rem;padding:6px 8px;border-radius:999px;background:#edf1e8;color:#60705a}
+    .request{background:#fff7f0;color:#9b5c33}
+
+    .tabs{display:flex;gap:8px;margin:16px 0 12px;overflow:auto;padding-bottom:2px}
+    .tab{border:1px solid var(--line);background:var(--paper);border-radius:999px;padding:9px 13px;color:#6f6155;white-space:nowrap;font-weight:700}
+    .tab.active{background:var(--orange);border-color:var(--orange);color:#fff}
+
+    .edit-drawer{position:fixed;inset:0 0 0 auto;width:min(470px,100%);background:var(--paper);z-index:20;box-shadow:-20px 0 60px rgba(43,28,17,.18);transform:translateX(102%);transition:.28s ease;padding:24px;overflow:auto}
+    .edit-drawer.open{transform:translateX(0)}
+    .drawer-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+    .drawer-head h2{margin:0;letter-spacing:-.04em}
+    .x{width:40px;height:40px;border-radius:50%;border:1px solid var(--line);background:#fffdfa}
+    .form-grid{display:grid;gap:13px}
+    label{font-size:.78rem;color:var(--muted);font-weight:700}
+    input,textarea,select{width:100%;margin-top:6px;border:1px solid var(--line);background:#fffdfa;border-radius:14px;padding:12px 13px;outline:none;color:var(--ink)}
+    input:focus,textarea:focus,select:focus{border-color:var(--orange)}
+    textarea{min-height:110px;resize:vertical}
+    .save{margin-top:16px;width:100%;border:0;border-radius:14px;background:var(--orange);color:white;font-weight:800;padding:13px}
+    .scrim{position:fixed;inset:0;background:rgba(32,27,23,.28);backdrop-filter:blur(2px);opacity:0;pointer-events:none;transition:.25s;z-index:19}
+    .scrim.open{opacity:1;pointer-events:auto}
+
+    .toast{position:fixed;right:24px;bottom:24px;background:var(--ink);color:white;padding:12px 16px;border-radius:14px;box-shadow:var(--shadow);opacity:0;transform:translateY(10px);transition:.22s;z-index:30}
+    .toast.show{opacity:1;transform:translateY(0)}
+
+    @media(max-width:980px){.app{grid-template-columns:72px 1fr}.hero-card,.content-grid{grid-template-columns:1fr}.page{padding:24px 20px}.rail{padding-inline:8px}.rail-btn{width:48px}.brand-mark{width:48px;height:48px}}
+    @media(max-width:640px){.app{display:block}.rail{position:fixed;left:10px;right:10px;bottom:10px;top:auto;width:auto;height:64px;z-index:10;flex-direction:row;justify-content:space-around;border-radius:22px;padding:7px 10px}.brand-mark,.rail-spacer{display:none}.page{padding:20px 14px 92px}.profile-card{align-items:flex-start;flex-direction:column}.avatar{width:86px;height:86px;border-radius:24px}.side-card{grid-template-columns:1fr 1fr}.details{grid-template-columns:1fr}.detail.full{grid-column:auto}.topbar{align-items:flex-end}.title-wrap h1{font-size:3rem}.edit-top{padding:10px 13px}.profile-copy h2{font-size:1.6rem}}
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="rail" aria-label="Rinder navigation">
+      <div class="brand-mark" aria-label="Rinder">R</div>
+      <button class="rail-btn" title="Home">⌂</button>
+      <button class="rail-btn" title="Listings">▤</button>
+      <button class="rail-btn" title="People">◎</button>
+      <button class="rail-btn" title="Messages">✉</button>
+      <button class="rail-btn active" title="Me">◉</button>
+      <div class="rail-spacer"></div>
+      <div class="avatar-mini">KH</div>
+    </aside>
+
+    <main class="page">
+      <div class="shell">
+        <div class="topbar">
+          <div class="title-wrap">
+            <small>Profile</small>
+            <h1>Me</h1>
+          </div>
+          <button class="edit-top" id="editProfile">Edit profile</button>
+        </div>
+
+        <section class="hero-card">
+          <article class="profile-card">
+            <div class="avatar" id="avatarInitials">KH</div>
+            <div class="profile-copy">
+              <h2 id="displayName">Kevin Hettiarachchi</h2>
+              <div class="email" id="displayEmail">kevin.hettiarachchi@example.com</div>
+              <div class="chips">
+                <span class="chip">20 years old</span>
+                <span class="chip">Software Engineering</span>
+                <span class="chip">Fredericton</span>
+              </div>
+            </div>
+          </article>
+
+          <aside class="side-card">
+            <div class="metric"><div class="n">2</div><span>Connected friends</span></div>
+            <div class="metric"><div class="n">1</div><span>Pending request</span></div>
+            <div class="metric wide"><div class="n">Ready to match</div><span>Your roommate profile is visible to suggested matches.</span></div>
+          </aside>
+        </section>
+
+        <section class="content-grid">
+          <article class="panel">
+            <div class="panel-head"><h3>Personal details</h3><span>Keep your profile current</span></div>
+            <div class="details">
+              <div class="detail"><small>Name</small><strong id="dName">Kevin Hettiarachchi</strong></div>
+              <div class="detail"><small>Age</small><strong id="dAge">20</strong></div>
+              <div class="detail"><small>Date of birth</small><strong id="dDob">2005-07-06</strong></div>
+              <div class="detail"><small>Gender</small><strong id="dGender">Male</strong></div>
+              <div class="detail"><small>Occupation</small><strong id="dOccupation">Student</strong></div>
+              <div class="detail"><small>Program</small><strong id="dProgram">Software Engineering</strong></div>
+              <div class="detail full"><small>Bio</small><div class="bio-text" id="dBio">Student in Fredericton looking for a calm, friendly shared-home setup. I like clean spaces, respectful roommates and a good balance between studying and hanging out.</div></div>
+            </div>
+          </article>
+
+          <aside class="connections-stack">
+            <section class="panel connection-tab">
+              <div class="panel-head"><h3>Friends</h3><span>2 connected</span></div>
+              <div class="friend-list">
+                <div class="friend">
+                  <div class="friend-avatar">GP</div>
+                  <div class="friend-copy"><strong>Grishma Pandale</strong><span>Friend</span></div>
+                  <span class="status">Connected</span>
+                </div>
+                <div class="friend">
+                  <div class="friend-avatar">VW</div>
+                  <div class="friend-copy"><strong>Ves Wang</strong><span>Friend</span></div>
+                  <span class="status">Connected</span>
+                </div>
+              </div>
+            </section>
+
+            <section class="panel connection-tab">
+              <div class="panel-head"><h3>Requests</h3><span>1 pending</span></div>
+              <div class="friend-list">
+                <div class="friend">
+                  <div class="friend-avatar">RJ</div>
+                  <div class="friend-copy"><strong>Roommate request</strong><span>New request</span></div>
+                  <span class="status request">Review</span>
+                </div>
+              </div>
+            </section>
+          </aside>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <div class="scrim" id="scrim"></div>
+  <aside class="edit-drawer" id="drawer" aria-label="Edit profile">
+    <div class="drawer-head"><h2>Edit profile</h2><button class="x" id="closeDrawer">×</button></div>
+    <form id="profileForm" class="form-grid">
+      <label>Name<input id="nameInput" value="Kevin Hettiarachchi" /></label>
+      <label>Email<input id="emailInput" type="email" value="kevin.hettiarachchi@example.com" /></label>
+      <label>Age<input id="ageInput" type="number" value="20" /></label>
+      <label>Date of birth<input id="dobInput" type="date" value="2005-07-06" /></label>
+      <label>Gender<select id="genderInput"><option selected>Male</option><option>Female</option><option>Non-binary</option><option>Prefer not to say</option></select></label>
+      <label>Occupation<input id="occupationInput" value="Student" /></label>
+      <label>Program<input id="programInput" value="Software Engineering" /></label>
+      <label>Bio<textarea id="bioInput">Student in Fredericton looking for a calm, friendly shared-home setup. I like clean spaces, respectful roommates and a good balance between studying and hanging out.</textarea></label>
+      <button class="save" type="submit">Save changes</button>
+    </form>
+  </aside>
+  <div class="toast" id="toast">Profile updated</div>
+
+  <script>
+    const $ = s => document.querySelector(s);
+    const drawer = $('#drawer'), scrim = $('#scrim'), toast = $('#toast');
+    const openDrawer = () => { drawer.classList.add('open'); scrim.classList.add('open'); };
+    const closeDrawer = () => { drawer.classList.remove('open'); scrim.classList.remove('open'); };
+    $('#editProfile').addEventListener('click', openDrawer);
+    $('#closeDrawer').addEventListener('click', closeDrawer);
+    scrim.addEventListener('click', closeDrawer);
+
+    $('#profileForm').addEventListener('submit', e => {
+      e.preventDefault();
+      const name = $('#nameInput').value.trim() || 'Rinder User';
+      $('#displayName').textContent = name;
+      $('#dName').textContent = name;
+      $('#displayEmail').textContent = $('#emailInput').value.trim();
+      $('#dAge').textContent = $('#ageInput').value;
+      $('#dDob').textContent = $('#dobInput').value;
+      $('#dGender').textContent = $('#genderInput').value;
+      $('#dOccupation').textContent = $('#occupationInput').value.trim();
+      $('#dProgram').textContent = $('#programInput').value.trim();
+      $('#dBio').textContent = $('#bioInput').value.trim();
+      $('#avatarInitials').textContent = name.split(/\s+/).map(x => x[0]).join('').slice(0,2).toUpperCase();
+      closeDrawer();
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 1800);
+    });
+  </script>
+</body>
+</html>
